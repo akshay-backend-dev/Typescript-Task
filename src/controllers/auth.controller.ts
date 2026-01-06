@@ -5,17 +5,23 @@ import { User } from "../models/User";
 import { signupSchema, loginSchema } from "../schemas/auth.schema";
 import { env } from "../config/env";
 
+import logger from "../utils/logger";
+
 // Signup
 export const signup = async (req: Request, res: Response) => {
+  logger.debug("signup flow started");
   const parsed = signupSchema.safeParse(req.body);
+  logger.debug(`Signup payload: ${JSON.stringify(req.body)}`);
   if (!parsed.success) {
     return res.status(400).json(parsed.error.flatten());
   }
+  logger.debug("Signup payload validated successfully");
 
   const { name, email, address, password } = parsed.data;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
+    logger.error("Email already exists");
     return res.status(409).json({ message: "Email already exists" });
   }
 
@@ -28,6 +34,7 @@ export const signup = async (req: Request, res: Response) => {
     password: hashedPassword,
   });
 
+  logger.info("User registered succesfully");
   res.status(201).json({ message: "User registered successfully", userId: user._id });
 };
 
@@ -42,10 +49,16 @@ export const login = async (req: Request, res: Response) => {
   const { email, password } = parsed.data;
 
   const user = await User.findOne({ email });
-  if (!user) return res.status(401).json({ message: "Invalid credentials" });
+  if (!user){
+    logger.error("Invalid credentials: Email");
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+  if (!isMatch){
+    logger.error("Invalid credentials: Password");
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
 
   const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: "1d" });
 
