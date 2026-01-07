@@ -24,7 +24,7 @@ components:
       required:
         - name
         - email
-        - address
+        - role
         - password
         - confirmPassword
       properties:
@@ -34,9 +34,10 @@ components:
         email:
           type: string
           example: akshay@test.com
-        address:
+        role:
           type: string
-          example: India
+          enum: [user, admin]
+          example: user
         password:
           type: string
           example: password123

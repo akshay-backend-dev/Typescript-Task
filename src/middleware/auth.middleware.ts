@@ -1,26 +1,42 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
-
 import logger from "../utils/logger";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+interface JwtPayload {
+  userId: string;
+  name: string;
+  email: string;
+  role: "user" | "admin";
+}
 
-  // Token generated after logging in
-  const token = req.headers.authorization?.split(" ")[1];
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers.authorization;
 
-  // Check that user logged-in or not using token
-  if (!token){
-    logger.warn("No token exist");
-    return res.status(401).json({ message: "No token exist" });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    logger.warn("Authorization header missing or malformed");
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
+  const token = authHeader.split(" ")[1];
+
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string };
-    (req as any).userId = decoded.userId;
+    const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+
+    req.user = {
+      userId: decoded.userId,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+    };
+
     next();
-  } catch {
+  } catch (error) {
     logger.error("Invalid token");
-    res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };

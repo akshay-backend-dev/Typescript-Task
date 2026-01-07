@@ -5,14 +5,15 @@ export const signupSchema = z
   .object({
     name: z.string().min(2),
     email: z.string().email(),
-    address: z.string().min(6),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
+    role: z.enum(["user", "admin"]).default("user"),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords not match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
 
 // Schema for login
 export const loginSchema = z.object({

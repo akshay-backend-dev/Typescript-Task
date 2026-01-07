@@ -17,7 +17,7 @@ export const signup = async (req: Request, res: Response) => {
   }
   logger.debug("Signup payload validated successfully");
 
-  const { name, email, address, password } = parsed.data;
+  const { name, email, role, password } = parsed.data;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -30,7 +30,7 @@ export const signup = async (req: Request, res: Response) => {
   const user = await User.create({
     name,
     email,
-    address,
+    role,
     password: hashedPassword,
   });
 
@@ -60,7 +60,15 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: "1d" });
-
+  const token = jwt.sign(
+   {
+    userId: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+   },
+   env.JWT_SECRET,
+   { expiresIn: "1d" }
+  );
   res.json({ token });
 };
