@@ -1,6 +1,8 @@
 import express from "express";
 import authRoutes from "./routes/auth.routes";
 import bookRoutes from "./routes/book.routes";
+import adminRoutes from "./routes/admin.routes";
+
 
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
@@ -29,5 +31,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api", bookRoutes);
+app.use("/api", adminRoutes);
 
 export default app;

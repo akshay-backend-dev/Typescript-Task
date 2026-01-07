@@ -4,45 +4,67 @@ import { bookSchema } from "../schemas/book.schema";
 import { requireUser } from "../utils/requireUser";
 
 import logger from "../utils/logger";
+import { getUserLogger } from "../utils/userLogger";
 
 
 // Add new book
 export const addBook = async (req: Request, res: Response) => {
-  const user = requireUser(req, res);
-  if (!user) return;
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { userId, role } = req.user;
+  const userLogger = getUserLogger(userId, role);
+
+  userLogger.info("Add book request received");
 
   const parsed = bookSchema.safeParse(req.body);
   if (!parsed.success) {
+    userLogger.warn("Book validation failed");
     return res.status(400).json(parsed.error.flatten());
   }
 
   const book = await Book.create({
     ...parsed.data,
-    user: user.userId,
+    user: userId,
   });
 
-  logger.info(`Book created | bookId=${book._id}`);
+  userLogger.info(`Book added | bookId=${book._id}`);
   res.status(201).json(book);
 };
 
 // Get all books
 export const getBooks = async (req: Request, res: Response) => {
-  const user = requireUser(req, res);
-  if (!user) return;
+  const { userId, role } = req.user!;
+  const userLogger = getUserLogger(userId, role);
 
-  const books = await Book.find({ user: user.userId });
+  userLogger.info("Fetched books list");
+
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const filter =
+    req.user.role === "admin"
+      ? {} // ALL BOOKS
+      : { user: req.user.userId };
+
+  const books = await Book.find({ user: userId });
   res.json(books);
 };
 
 // Get specific book by ID
 export const getBookById = async (req: Request, res: Response) => {
-  const user = requireUser(req, res);
-  if (!user) return;
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-  const book = await Book.findOne({
-    _id: req.params.id,
-    user: user.userId,
-  });
+  const filter =
+    req.user.role === "admin"
+      ? { _id: req.params.id }
+      : { _id: req.params.id, user: req.user.userId };
+
+  const book = await Book.findOne(filter);
 
   if (!book) {
     return res.status(404).json({ message: "Book not found" });
@@ -54,49 +76,66 @@ export const getBookById = async (req: Request, res: Response) => {
 
 // Update an existing specific book by ID
 export const updateBook = async (req: Request, res: Response) => {
-  const user = requireUser(req, res);
-  if (!user) return;
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { userId, role } = req.user;
+  const userLogger = getUserLogger(userId, role);
 
   const parsed = bookSchema.safeParse(req.body);
   if (!parsed.success) {
+    userLogger.warn("Update validation failed");
     return res.status(400).json(parsed.error.flatten());
   }
 
+  const filter =
+    role === "admin"
+      ? { _id: req.params.id }
+      : { _id: req.params.id, user: userId };
+
   const book = await Book.findOneAndUpdate(
-    { _id: req.params.id, user: user.userId },
+    filter,
     parsed.data,
     { new: true }
   );
 
   if (!book) {
+    userLogger.warn("Update failed: Book not found or access denied");
     return res.status(404).json({ message: "Book not found" });
   }
 
+  userLogger.info(`Book updated | bookId=${book._id}`);
   res.json(book);
 };
 
 
 // Delete specific book by ID
 export const deleteBook = async (req: Request, res: Response) => {
-  if (!req.user) {
-    logger.warn("Unauthorized delete attempt");
+   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  if (req.user.role !== "admin") {
-    logger.warn(
-      `Forbidden delete attempt by userId=${req.user.userId}, role=${req.user.role}`
-    );
+  const { userId, role } = req.user!;
+  const userLogger = getUserLogger(userId, role);
+
+  if (role !== "admin") {
+    userLogger.warn("Unauthorized delete attempt");
     return res.status(403).json({ message: "Only admin can delete books" });
   }
+
+  const filter =
+    role === "admin"
+      ? { _id: req.params.id }
+      : { _id: req.params.id, user: userId };
 
   const book = await Book.findByIdAndDelete(req.params.id);
 
   if (!book) {
-    logger.warn("Book not found");
+    userLogger.warn("Delete failed: Book not found");
     return res.status(404).json({ message: "Book not found" });
   }
 
-  logger.info(`Book deleted by admin | bookId=${book._id}`);
-  return res.json({ message: "Book deleted successfully" });
+  userLogger.info(`Book deleted | bookId=${book._id}`);
+  res.json({ message: "Book deleted successfully" });
 };
