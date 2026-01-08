@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import { Book } from "../models/Book";
+import Book from "../models/Book";
 import { bookSchema } from "../schemas/book.schema";
 import mongoose from "mongoose";
-// import { requireUser } from "../utils/requireUser";
 
-import logger from "../utils/logger";
-import { getUserLogger } from "../utils/userLogger";
+import logger from "../logger/logger";
+import { getUserLogger } from "../logger/userLogger";
 
 
 // Add new book

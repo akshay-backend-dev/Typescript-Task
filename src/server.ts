@@ -1,12 +1,17 @@
+import path from "path";
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: path.resolve(process.cwd(), ".env"),
+});
+
 import app from "./app";
 import { connectDB } from "./config/db";
-import { env } from "./config/env";
-
-import logger from "./utils/logger";
+import logger from "./logger/logger";
 
 connectDB().then(() => {
-  app.listen(env.PORT, () => {
-    logger.info(`Server running on port ${env.PORT}`)
-    console.log(`Server running on port ${env.PORT}`);
+  app.listen(process.env.PORT || 2209, () => {
+    logger.info(`Server running on port ${process.env.PORT}`);
+    console.log(`Server running on port ${process.env.PORT}`);
   });
 });

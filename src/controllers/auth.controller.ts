@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User";
+import User from "../models/User";
 import { signupSchema, loginSchema } from "../schemas/auth.schema";
-import { env } from "../config/env";
+// import { env } from "../config/env";
 
-import logger from "../utils/logger";
+import logger from "../logger/logger";
 
 // Signup
 export const signup = async (req: Request, res: Response) => {
@@ -67,7 +67,7 @@ export const login = async (req: Request, res: Response) => {
     email: user.email,
     role: user.role,
    },
-   env.JWT_SECRET,
+   process.env.JWT_SECRET as string,
    { expiresIn: "1d" }
   );
   res.json({ token });

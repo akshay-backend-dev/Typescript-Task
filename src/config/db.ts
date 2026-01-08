@@ -1,16 +1,19 @@
 import mongoose from "mongoose";
-import { env } from "./env";
-
-import logger from "../utils/logger";
+import logger from "../logger/logger";
 
 export const connectDB = async () => {
+  const uri = process.env.MONGO_URI;
+
+  if (!uri) {
+    logger.error("MONGO_URI is undefined");
+    process.exit(1);
+  }
+
   try {
-    await mongoose.connect(env.MONGO_URI);
-    logger.info("MongoDB connection established");
-    console.log("MongoDB connection established");
-  } catch (err) {
-    logger.error("MongoDB connection error:", err);
-    console.error("MongoDB connection error:", err);
+    await mongoose.connect(uri);
+    logger.info("MongoDB connected");
+  } catch (error) {
+    logger.error("MongoDB connection error", error);
     process.exit(1);
   }
 };

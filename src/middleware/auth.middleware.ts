@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { env } from "../config/env";
-import logger from "../utils/logger";
+// import { env } from "../config/env";
+import logger from "../logger/logger";
 
 interface JwtPayload {
   userId: string;
@@ -25,7 +25,7 @@ export const authMiddleware = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
     req.user = {
       userId: decoded.userId,
