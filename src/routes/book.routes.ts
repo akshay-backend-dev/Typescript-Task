@@ -6,6 +6,7 @@ import {
   updateBook,
   deleteBook,
 } from "../controllers/book.controller";
+
 import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
