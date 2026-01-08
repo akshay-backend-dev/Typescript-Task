@@ -5,7 +5,7 @@ run:
 
 info:
   title: Book Management API (Typescript + Zod)
-  description: API for user authentication and book management using JWT
+  description: API for user authentication and role-based book management using JWT
   version: 1.0.0
 
 servers:
@@ -73,7 +73,7 @@ components:
           example: Robert Martin
         publishedYear:
           type: integer
-          example: 2002
+          example: 2008
 
     BookResponse:
       type: object
@@ -87,19 +87,28 @@ components:
           type: string
         publishedYear:
           type: integer
-        user:
-          type: string
         createdAt:
           type: string
         updatedAt:
           type: string
+        user:
+          type: object
+          properties:
+            _id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+              enum: [user, admin]
 
 paths:
   /api/auth/signup:
     post:
-      summary: Create new user
-      tags:
-        - Auth
+      summary: Register new user
+      tags: [Auth]
       requestBody:
         required: true
         content:
@@ -116,9 +125,8 @@ paths:
 
   /api/auth/login:
     post:
-      summary: Login user and get JWT token
-      tags:
-        - Auth
+      summary: Login user and get JWT
+      tags: [Auth]
       requestBody:
         required: true
         content:
@@ -134,8 +142,7 @@ paths:
   /api/books:
     post:
       summary: Add new book
-      tags:
-        - Books
+      tags: [Books]
       security:
         - BearerAuth: []
       requestBody:
@@ -147,28 +154,39 @@ paths:
       responses:
         "201":
           description: Book created successfully
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
 
     get:
-      summary: Get all books for logged-in user
-      tags:
-        - Books
+      summary: Get books (role-based)
+      description: |
+        USER:
+        - Gets only own books
+
+        ADMIN:
+        - Gets all users books
+        - Uses aggregation pipeline with user details
+      tags: [Books]
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: List of books
+          description: Books fetched successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/BookResponse"
+        "401":
+          description: Unauthorized
 
   /api/books/{id}:
     get:
-      summary: Get a book by ID
-      tags:
-        - Books
+      summary: Get book by ID
+      tags: [Books]
       security:
         - BearerAuth: []
       parameters:
@@ -182,11 +200,18 @@ paths:
           description: Book found
         "404":
           description: Book not found
+        "401":
+          description: Unauthorized
 
     put:
-      summary: Update book
-      tags:
-        - Books
+      summary: Update book (role-based)
+      description: |
+        USER:
+        - Can update only own book
+
+        ADMIN:
+        - Can update any user's book
+      tags: [Books]
       security:
         - BearerAuth: []
       parameters:
@@ -203,14 +228,20 @@ paths:
               $ref: "#/components/schemas/BookRequest"
       responses:
         "200":
-          description: Book updated
+          description: Book updated successfully
+        "403":
+          description: Forbidden
         "404":
           description: Book not found
+        "401":
+          description: Unauthorized
 
     delete:
-      summary: Delete book
-      tags:
-        - Books
+      summary: Delete book (admin only)
+      description: |
+        Only ADMIN users can delete books.
+        Normal users will receive 403 Forbidden.
+      tags: [Books]
       security:
         - BearerAuth: []
       parameters:
@@ -221,6 +252,10 @@ paths:
             type: string
       responses:
         "200":
-          description: Book deleted
+          description: Book deleted successfully
+        "403":
+          description: Only admin can delete books
         "404":
           description: Book not found
+        "401":
+          description: Unauthorized
