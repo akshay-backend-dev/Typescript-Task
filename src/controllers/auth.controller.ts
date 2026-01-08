@@ -3,11 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { signupSchema, loginSchema } from "../schemas/auth.schema";
-// import { env } from "../config/env";
 
 import logger from "../logger/logger";
 
-// Signup
 export const signup = async (req: Request, res: Response) => {
   logger.debug("signup flow started");
   const parsed = signupSchema.safeParse(req.body);
@@ -38,8 +36,6 @@ export const signup = async (req: Request, res: Response) => {
   res.status(201).json({ message: "User registered successfully", userId: user._id });
 };
 
-
-// Login
 export const login = async (req: Request, res: Response) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
