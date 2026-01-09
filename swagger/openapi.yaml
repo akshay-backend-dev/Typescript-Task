@@ -1,0 +1,41 @@
+openapi: 3.0.3
+
+info:
+  title: Book Management API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:2209
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    SignupRequest:
+      $ref: "./components/schemas.yaml#/SignupRequest"
+    LoginRequest:
+      $ref: "./components/schemas.yaml#/LoginRequest"
+    BookRequest:
+      $ref: "./components/schemas.yaml#/BookRequest"
+    BookResponse:
+      $ref: "./components/schemas.yaml#/BookResponse"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /api/auth/signup:
+    $ref: "./paths/auth.yaml"
+
+  /api/auth/login:
+    $ref: "./paths/auth.yaml"
+
+  /api/books:
+    $ref: "./paths/books.yaml"
+
+  /api/books/{id}:
+    $ref: "./paths/books.yaml"

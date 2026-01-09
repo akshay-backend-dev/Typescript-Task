@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 import logger from "../logger/logger";
 import { getUserLogger } from "../logger/userLogger";
 
-
 // Add new book
 export const addBook = async (req: Request, res: Response) => {
   if (!req.user) {

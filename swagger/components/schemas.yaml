@@ -1,0 +1,51 @@
+SignupRequest:
+  type: object
+  required: [name, email, role, password, confirmPassword]
+  properties:
+    name:
+      type: string
+    email:
+      type: string
+      format: email
+    role:
+      type: string
+      enum: [user, admin]
+    password:
+      type: string
+      format: password
+    confirmPassword:
+      type: string
+
+LoginRequest:
+  type: object
+  required: [email, password]
+  properties:
+    email:
+      type: string
+      format: email
+    password:
+      type: string
+      format: password
+
+BookRequest:
+  type: object
+  required: [title, author, publishedYear]
+  properties:
+    title:
+      type: string
+    author:
+      type: string
+    publishedYear:
+      type: integer
+
+BookResponse:
+  type: object
+  properties:
+    _id:
+      type: string
+    title:
+      type: string
+    author:
+      type: string
+    publishedYear:
+      type: integer

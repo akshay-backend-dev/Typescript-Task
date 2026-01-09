@@ -1,0 +1,29 @@
+get:
+  tags: [Books]
+  summary: Get all books
+  security:
+    - BearerAuth: []
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../components/schemas.yaml#/BookResponse"
+
+post:
+  tags: [Books]
+  summary: Create book
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas.yaml#/BookRequest"
+  responses:
+    "201":
+      description: Created
