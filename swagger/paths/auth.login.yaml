@@ -1,0 +1,37 @@
+post:
+  tags: [Auth]
+  summary: Login user
+  description: >
+    Use this endpoint for user authentication.
+    - Login → requires email & password
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: "../components/schemas.yaml#/LoginRequest"
+  responses:
+    "201":
+      description: Login successful
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/LoginResponse"
+    "400":
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/ErrorResponse"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal server error

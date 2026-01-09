@@ -19,19 +19,25 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 const swaggerPath = path.join(__dirname,"../swagger/openapi.yaml");
+// const swaggerPath =
+//   process.env.NODE_ENV === "production"
+//     ? path.join(__dirname, "swagger/openapi.yaml")
+//     : path.join(process.cwd(), "swagger/openapi.yaml");
 
-SwaggerParser.bundle(swaggerPath)
-  .then((api: any) => {
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(api, {
+app.use("/api-docs", swaggerUi.serve);
+
+app.get("/api-docs", async (req, res, next) => {
+  try {
+    const api = await SwaggerParser.bundle(swaggerPath);
+    swaggerUi.setup(api, {
       swaggerOptions: {
         persistAuthorization: true,
       },
-    }));
-    console.log("API Docs ready at http://localhost:2209/api-docs");
-  })
-  .catch((err: unknown) => {
-    console.error("Failed to load OpenAPI spec:", err);
-  });
+    })(req, res, next);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api", bookRoutes);

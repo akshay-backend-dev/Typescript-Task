@@ -1,21 +1,102 @@
 get:
   tags: [Books]
   summary: Get all books
+  description: Returns list of all books
   security:
     - BearerAuth: []
+  parameters:
+    - name: page
+      in: query
+      description: Page number
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    - name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    - name: author
+      in: query
+      description: Filter by author name
+      schema:
+        type: string
   responses:
     "200":
-      description: OK
+      description: Books fetched successfully
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: "../components/schemas.yaml#/BookResponse"
+            type: object
+            properties:
+              -id:
+                type: string
+                example: 6960ea0c7736daded98af0ee
+              title:
+                type: string
+                example: Clean Code
+              author:
+                type: string
+                example: Robert Martin G
+              publishedYear:
+                type: integer
+                example: 2009
+              user:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: 6960deb3762dab04119ecb64
+                  name:
+                    type: string
+                    example: Akshay
+                  email:
+                    type: string
+                    example: akshay@test.com
+                  role:
+                    type: string
+                    example: admin or user
+              createdAt:
+                type: string
+                example: 2026-01-09T11:44:12.552Z
+
+    "204":
+      description: No books found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Book not found
+
+    "400":
+      description: Invalid query parameters
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/ErrorResponse"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal server error
+
 
 post:
   tags: [Books]
-  summary: Create book
+  summary: Create a new book
+  description: Admin or user both can add new book
   security:
     - BearerAuth: []
   requestBody:
@@ -23,7 +104,28 @@ post:
     content:
       application/json:
         schema:
-          $ref: "../components/schemas.yaml#/BookRequest"
+          $ref: "../components/schemas.yaml#/BookRequest"  
   responses:
     "201":
-      description: Created
+      description: Book created successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: "../components/schemas.yaml#/BookResponse"
+    "400":
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/ErrorResponse"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal server error

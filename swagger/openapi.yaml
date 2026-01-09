@@ -29,13 +29,13 @@ security:
 
 paths:
   /api/auth/signup:
-    $ref: "./paths/auth.yaml"
+    $ref: "./paths/auth.signup.yaml"
 
   /api/auth/login:
-    $ref: "./paths/auth.yaml"
+    $ref: "./paths/auth.login.yaml"
 
   /api/books:
     $ref: "./paths/books.yaml"
 
   /api/books/{id}:
-    $ref: "./paths/books.yaml"
+    $ref: "./paths/book-by-id.yaml"

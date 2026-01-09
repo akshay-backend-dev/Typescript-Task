@@ -1,0 +1,5 @@
+{
+  "watch": ["swagger", "dist"],
+  "ext": "yaml,js",
+  "exec": "node dist/server.js"
+}

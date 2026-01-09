@@ -1,0 +1,114 @@
+parameters:
+  - name: id
+    in: path
+    required: true
+    description: Book ID
+    schema:
+      type: string
+
+get:
+  tags: [Books]
+  summary: Get book by ID
+  security:
+    - BearerAuth: []
+
+  responses:
+    "200":
+      description: Book found
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/BookByIdResponse"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal server error
+
+put:
+  tags: [Books]
+  summary: Update book
+  description: Admin only
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas.yaml#/UpdateBookRequest"
+  responses:
+    "200":
+      description: Book updated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schema:
+                $ref: "../components/schemas.yaml#/UpdateBookResponse"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal server error
+      
+
+delete:
+  tags: [Books]
+  summary: Delete book
+  description: Admin only
+  security:
+    - BearerAuth: []
+  responses:
+    "204":
+      description: Book deleted successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Book deleted successfully
+    "403":
+      description: Forbidden (Admin only)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Only admin can delete books
+    "404":
+      description: Book not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Book not found
+
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal server error

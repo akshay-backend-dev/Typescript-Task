@@ -4,17 +4,35 @@ SignupRequest:
   properties:
     name:
       type: string
+      minLength: 2
+      example: Akshay
     email:
       type: string
       format: email
+      example: akshay@example.com
     role:
       type: string
       enum: [user, admin]
+      example: user or admin
     password:
       type: string
+      minLength: 8
       format: password
+      example: StrongP@ss123
     confirmPassword:
       type: string
+      format: password
+      example: StrongP@ss123
+
+SignupResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: User registered successfully
+    userId:
+      type: string
+      example: 6960deb3762dab04119ecb64
 
 LoginRequest:
   type: object
@@ -23,9 +41,18 @@ LoginRequest:
     email:
       type: string
       format: email
+      example: akshay@example.com
     password:
       type: string
       format: password
+      example: StrongP@ss123
+
+LoginResponse:
+  type: object
+  properties:
+    token:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6Ik....
 
 BookRequest:
   type: object
@@ -33,19 +60,121 @@ BookRequest:
   properties:
     title:
       type: string
+      example: Clean Code
     author:
       type: string
+      example: Robert Martin G
     publishedYear:
       type: integer
+      minimum: 1500
+      example: 2009
 
 BookResponse:
   type: object
   properties:
-    _id:
-      type: string
     title:
       type: string
+      example: Clean Code
     author:
       type: string
+      example: Robert Martin G
     publishedYear:
       type: integer
+      example: 2009
+    user:
+      type: string
+      example: 695df5fd19f8285670b34381
+    _id:
+      type: string
+      example: 64f1c2a9e3b1c2a9e3b1c2a9
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+    __v:
+      type: number
+
+BookByIdResponse:
+  type: object
+  properties:
+    _id:
+      type: string
+      example: 64f1c2a9e3b1c2a9e3b1c2a9
+    title:
+      type: string
+      example: Clean Code
+    author:
+      type: string
+      example: Robert Martin G
+    publishedYear:
+      type: integer
+      example: 2009
+    user:
+      type: string
+      example: 695df5fd19f8285670b34381
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+    __v:
+      type: number
+
+UpdateBookRequest:
+  type: object
+  required: [title, author, publishedYear]
+  properties:
+    title:
+      type: string
+      example: Not a  Clean Code
+    author:
+      type: string
+      example: Robert Martin G
+    publishedYear:
+      type: integer
+      minimum: 1500
+      example: 2011
+
+UpdateBookResponse:
+  type: object
+  properties:
+    _id:
+      type: string
+      example: 64f1c2a9e3b1c2a9e3b1c2a9
+    title:
+      type: string
+      example: Not a Clean Code
+    author:
+      type: string
+      example: Robert Martin G
+    publishedYear:
+      type: integer
+      example: 2011
+    user:
+      type: string
+      example: 695df5fd19f8285670b34381
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+    __v:
+      type: number
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+      example: false
+    message:
+      type: string
+      example: Validation failed
+    errors:
+      type: array
+      items:
+        type: string
