@@ -10,21 +10,49 @@ post:
     content:
       application/json:
         schema:
-          oneOf:
-            - $ref: "../components/schemas.yaml#/LoginRequest"
+          $ref: "../components/schemas.yaml#/LoginRequest"
+
   responses:
-    "201":
+    "200":
       description: Login successful
       content:
         application/json:
           schema:
-            $ref: "../components/schemas.yaml#/LoginResponse"
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                $ref: "../components/schemas.yaml#/LoginResponse"
+
     "400":
-      description: Validation error
+      description: Bad request
       content:
         application/json:
           schema:
-            $ref: "../components/schemas.yaml#/ErrorResponse"
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              error:
+                $ref: "../components/schemas.yaml#/ErrorResponse"
+
+    "401":
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Invalid credentials
+
     "500":
       description: Internal server error
       content:
@@ -32,6 +60,9 @@ post:
           schema:
             type: object
             properties:
+              success:
+                type: boolean
+                example: false
               message:
                 type: string
                 example: Internal server error

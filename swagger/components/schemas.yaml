@@ -171,10 +171,21 @@ ErrorResponse:
     success:
       type: boolean
       example: false
-    message:
-      type: string
-      example: Validation failed
-    errors:
+
+    formErrors:
       type: array
       items:
         type: string
+      example: []
+
+    fieldErrors:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
+      example:
+        email:
+          - Invalid email format
+        password:
+          - Password must be at least 8 characters

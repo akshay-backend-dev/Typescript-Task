@@ -1,0 +1,27 @@
+// {
+//   "name": "Akshay",
+//   "email": "akshay@test4.com",
+//   "role": "user",
+//   "password": "password123",
+//   "confirmPassword": "password123"
+// }
+
+
+// {
+//   "email": "akshay@test.com",
+//   "password": "password123"
+// }
+
+
+// {
+//   "title": "Clean Code",
+//   "author": "Robert Martin",
+//   "publishedYear": 2009
+// }
+
+
+// {
+//   "title": "Not a Clean Code",
+//   "author": "Robert Martin G",
+//   "publishedYear": 2011
+// }

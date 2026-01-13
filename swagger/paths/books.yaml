@@ -4,6 +4,7 @@ get:
   description: Returns list of all books
   security:
     - BearerAuth: []
+
   parameters:
     - name: page
       in: query
@@ -12,6 +13,7 @@ get:
         type: integer
         minimum: 1
         default: 1
+
     - name: limit
       in: query
       description: Number of items per page
@@ -20,11 +22,13 @@ get:
         minimum: 1
         maximum: 100
         default: 10
+
     - name: author
       in: query
       description: Filter by author name
       schema:
         type: string
+
   responses:
     "200":
       description: Books fetched successfully
@@ -33,47 +37,30 @@ get:
           schema:
             type: object
             properties:
-              -id:
-                type: string
-                example: 6960ea0c7736daded98af0ee
-              title:
-                type: string
-                example: Clean Code
-              author:
-                type: string
-                example: Robert Martin G
-              publishedYear:
-                type: integer
-                example: 2009
-              user:
+              success:
+                type: boolean
+                example: true
+
+              data:
+                type: array
+                items:
+                  $ref: "../components/schemas.yaml#/BookResponse"
+
+              pagination:
                 type: object
                 properties:
-                  _id:
-                    type: string
-                    example: 6960deb3762dab04119ecb64
-                  name:
-                    type: string
-                    example: Akshay
-                  email:
-                    type: string
-                    example: akshay@test.com
-                  role:
-                    type: string
-                    example: admin or user
-              createdAt:
-                type: string
-                example: 2026-01-09T11:44:12.552Z
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 25
 
     "204":
       description: No books found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Book not found
 
     "400":
       description: Invalid query parameters
@@ -81,6 +68,7 @@ get:
         application/json:
           schema:
             $ref: "../components/schemas.yaml#/ErrorResponse"
+
     "500":
       description: Internal server error
       content:
@@ -88,10 +76,12 @@ get:
           schema:
             type: object
             properties:
+              success:
+                type: boolean
+                example: false
               message:
                 type: string
                 example: Internal server error
-
 
 post:
   tags: [Books]
@@ -99,12 +89,14 @@ post:
   description: Admin or user both can add new book
   security:
     - BearerAuth: []
+
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: "../components/schemas.yaml#/BookRequest"  
+          $ref: "../components/schemas.yaml#/BookRequest"
+
   responses:
     "201":
       description: Book created successfully
@@ -112,13 +104,20 @@ post:
         application/json:
           schema:
             type: object
-            $ref: "../components/schemas.yaml#/BookResponse"
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                $ref: "../components/schemas.yaml#/BookResponse"
+
     "400":
       description: Validation error
       content:
         application/json:
           schema:
             $ref: "../components/schemas.yaml#/ErrorResponse"
+
     "500":
       description: Internal server error
       content:
@@ -126,6 +125,9 @@ post:
           schema:
             type: object
             properties:
+              success:
+                type: boolean
+                example: false
               message:
                 type: string
                 example: Internal server error

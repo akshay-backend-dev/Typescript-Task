@@ -83,27 +83,6 @@ export const getBooks = async (req: Request, res: Response) => {
 
 
 // Get specific book by ID
-
-// export const getBookById = async (req: Request, res: Response) => {
-//   if (!req.user) {
-//     return res.status(401).json({ message: "Unauthorized" });
-//   }
-
-//   const filter =
-//     req.user.role === "admin"
-//       ? { _id: req.params.id }
-//       : { _id: req.params.id, user: req.user.userId };
-
-//   const book = await Book.findOne(filter);
-
-//   if (!book) {
-//     return res.status(404).json({ message: "Book not found" });
-//   }
-
-//   res.json(book);
-// };
-
-
 export const getBookById = async (req: Request, res: Response) => {
   const { userId, role } = req.user!;
 
@@ -123,42 +102,6 @@ export const getBookById = async (req: Request, res: Response) => {
 
 
 // Update an existing specific book by ID
-
-// export const updateBook = async (req: Request, res: Response) => {
-//   if (!req.user) {
-//     return res.status(401).json({ message: "Unauthorized" });
-//   }
-
-//   const { userId, role } = req.user;
-//   const userLogger = getUserLogger(userId, role);
-
-//   const parsed = bookSchema.safeParse(req.body);
-//   if (!parsed.success) {
-//     userLogger.warn("Update validation failed");
-//     return res.status(400).json(parsed.error.flatten());
-//   }
-
-//   const filter =
-//     role === "admin"
-//       ? { _id: req.params.id }
-//       : { _id: req.params.id, user: userId };
-
-//   const book = await Book.findOneAndUpdate(
-//     filter,
-//     parsed.data,
-//     { new: true }
-//   );
-
-//   if (!book) {
-//     userLogger.warn("Update failed: Book not found or access denied");
-//     return res.status(404).json({ message: "Book not found" });
-//   }
-
-//   userLogger.info(`Book updated | bookId=${book._id}`);
-//   res.json(book);
-// };
-
-
 export const updateBook = async (req: Request, res: Response) => {
   const { userId, role } = req.user!;
 
@@ -187,38 +130,6 @@ export const updateBook = async (req: Request, res: Response) => {
 
 
 // Delete specific book by ID
-
-// export const deleteBook = async (req: Request, res: Response) => {
-//    if (!req.user) {
-//     return res.status(401).json({ message: "Unauthorized" });
-//   }
-
-//   const { userId, role } = req.user!;
-//   const userLogger = getUserLogger(userId, role);
-
-//   if (role !== "admin") {
-//     userLogger.warn("Unauthorized delete attempt");
-//     return res.status(403).json({ message: "Only admin can delete books" });
-//   }
-
-//   const filter =
-//     role === "admin"
-//       ? { _id: req.params.id }
-//       : { _id: req.params.id, user: userId };
-
-//   const book = await Book.findByIdAndDelete(req.params.id);
-
-//   if (!book) {
-//     userLogger.warn("Delete failed: Book not found");
-//     return res.status(404).json({ message: "Book not found" });
-//   }
-
-//   userLogger.info(`Book deleted | bookId=${book._id}`);
-//   res.json({ message: "Book deleted successfully" });
-// };
-
-
-
 export const deleteBook = async (req: Request, res: Response) => {
   const { role } = req.user!;
 
