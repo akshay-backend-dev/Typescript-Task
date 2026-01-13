@@ -8,6 +8,8 @@ import { getUserLogger } from "../logger/userLogger";
 
 // Add new book
 export const addBook = async (req: Request, res: Response) => {
+  console.log("ADD BOOK CONTROLLER HIT");
+
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }

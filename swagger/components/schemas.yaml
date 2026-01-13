@@ -189,3 +189,5 @@ ErrorResponse:
           - Invalid email format
         password:
           - Password must be at least 8 characters
+        publishedYear:
+          - Published year must be greater than 1500
