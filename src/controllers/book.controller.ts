@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Book from "../models/Book";
-import { bookSchema } from "../schemas/book.schema";
+import { bookSchema, updateBookSchema } from "../schemas/book.schema";
 import mongoose from "mongoose";
 
 import logger from "../logger/logger";
@@ -8,7 +8,8 @@ import { getUserLogger } from "../logger/userLogger";
 
 // Add new book
 export const addBook = async (req: Request, res: Response) => {
-  console.log("ADD BOOK CONTROLLER HIT");
+
+  // console.log("REQ BODY:", req.body);
 
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -33,6 +34,7 @@ export const addBook = async (req: Request, res: Response) => {
   userLogger.info(`Book added | bookId=${book._id}`);
   res.status(201).json(book);
 };
+
 
 // Get all books
 export const getBooks = async (req: Request, res: Response) => {
@@ -76,6 +78,12 @@ export const getBooks = async (req: Request, res: Response) => {
 
     const books = await Book.aggregate(pipeline);
 
+    if (books.length === 0) {
+      return res.status(404).json({
+        message: "No books found",
+      });
+    }
+
     res.json(books);
   } catch (err) {
     logger.error("Get books aggregation failed", err);
@@ -107,14 +115,20 @@ export const getBookById = async (req: Request, res: Response) => {
 export const updateBook = async (req: Request, res: Response) => {
   const { userId, role } = req.user!;
 
-  const parsed = bookSchema.safeParse(req.body);
+  const parsed = updateBookSchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json(parsed.error.flatten());
   }
 
+  if (Object.keys(parsed.data).length === 0) {
+    return res.status(400).json({
+      message: "At least one field is required to update",
+    });
+  }
+
   const filter =
     role === "admin"
-      ? { _id: req.params.id }          
+      ? { _id: req.params.id }
       : { _id: req.params.id, user: userId };
 
   const book = await Book.findOneAndUpdate(
@@ -148,4 +162,28 @@ export const deleteBook = async (req: Request, res: Response) => {
   }
 
   res.json({ message: "Book deleted successfully" });
+};
+
+// Delete ALL books (Admin only)
+export const deleteAllBooks = async (req: Request, res: Response) => {
+  const { role } = req.user!;
+
+  if (role !== "admin") {
+    return res.status(403).json({
+      message: "Only admin can delete all books",
+    });
+  }
+
+  if (req.query.confirm !== "true") {
+    return res.status(400).json({
+      message: "Please confirm delete by passing ?confirm=true",
+    });
+  }
+
+  const result = await Book.deleteMany({});
+
+  res.json({
+    message: "All books deleted successfully",
+    deletedCount: result.deletedCount,
+  });
 };

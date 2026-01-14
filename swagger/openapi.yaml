@@ -17,15 +17,56 @@ components:
   schemas:
     SignupRequest:
       $ref: "./components/schemas.yaml#/SignupRequest"
+
+    SignupResponse:
+      $ref: "./components/schemas.yaml#/SignupResponse"
+
     LoginRequest:
       $ref: "./components/schemas.yaml#/LoginRequest"
+
+    LoginResponse:
+      $ref: "./components/schemas.yaml#/LoginResponse"
+
     BookRequest:
       $ref: "./components/schemas.yaml#/BookRequest"
+
     BookResponse:
       $ref: "./components/schemas.yaml#/BookResponse"
 
+    BookByIdResponse:
+      $ref: "./components/schemas.yaml#/BookByIdResponse"
+
+    UpdateBookRequest:
+      $ref: "./components/schemas.yaml#/UpdateBookRequest"
+
+    UpdateBookResponse:
+      $ref: "./components/schemas.yaml#/UpdateBookResponse"
+
+    ErrorResponse:
+      $ref: "./components/schemas.yaml#/ErrorResponse"
+
+    GetAllUsersResponse:
+      $ref: "./components/schemas.yaml#/GetAllUsersResponse"
+
+    UserResponse:
+      $ref: "./components/schemas.yaml#/UserResponse"
+
+    UpdateUserRequest:
+      $ref: "./components/schemas.yaml#/UpdateUserRequest"
+
+    UpdateUserResponse:
+      $ref: "./components/schemas.yaml#/UpdateUserResponse"
+
+    DeleteAllUsersResponse:
+      $ref:  "./components/schemas.yaml#/DeleteAllUsersResponse"
+
+    DeleteUserResponse:
+      $ref: "./components/schemas.yaml#/DeleteUserResponse"
+
+
 security:
   - BearerAuth: []
+
 
 paths:
   /api/auth/signup:
@@ -39,3 +80,9 @@ paths:
 
   /api/books/{id}:
     $ref: "./paths/book-by-id.yaml"
+
+  /api/users:
+    $ref: "./paths/users.yaml"
+
+  /api/users/{id}:
+    $ref: "./paths/user-by-id.yaml"

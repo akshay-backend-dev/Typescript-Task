@@ -5,6 +5,7 @@ import {
   getBookById,
   updateBook,
   deleteBook,
+  deleteAllBooks
 } from "../controllers/book.controller";
 
 import { authMiddleware } from "../middleware/auth.middleware";
@@ -24,6 +25,9 @@ router.get("/books/:id", getBookById);
 
 // Route to update an specific existing book by id
 router.put("/books/:id", updateBook);
+
+//  Route to delete all books
+router.delete("/books/all", deleteAllBooks);
 
 // Route to delete a book
 router.delete("/books/:id", deleteBook);

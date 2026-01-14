@@ -191,3 +191,105 @@ ErrorResponse:
           - Password must be at least 8 characters
         publishedYear:
           - Published year must be greater than 1500
+        updateRequirement:
+          - At least one field is required to update
+
+UserResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+      example: true
+    _id:
+      type: string
+      example: 6960deb3762dab04119ecb64
+    name:
+      type: string
+      example: Rahul Sharma
+    email:
+      type: string
+      format: email
+      example: rahul@example.com
+    role:
+      type: string
+      enum: [user]
+      example: user
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+        
+GetAllUsersResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+      example: true
+    totalUsers:
+      type: integer
+      example: 2
+    users:
+      type: array
+      items:
+        $ref: '#/UserResponse'
+      example:
+        - _id: 6960deb3762dab04119ecb64
+          name: Rahul Sharma
+          email: rahul@example.com
+          role: user
+          createdAt: 2025-01-10T10:30:00.000Z
+          updatedAt: 2025-01-10T10:30:00.000Z
+
+        - _id: 6960deb3762dab04119ecb65
+          name: Akshay Verma
+          email: akshay@example.com
+          role: user
+          createdAt: 2025-01-11T09:15:00.000Z
+          updatedAt: 2025-01-11T09:15:00.000Z
+
+UpdateUserRequest:
+  type: object
+  properties:
+    name:
+      type: string
+      minLength: 2
+      example: Updated Name
+    email:
+      type: string
+      format: email
+      example: updated@email.com
+
+UpdateUserResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: User updated successfully
+    user:
+      $ref: '#/UserResponse'
+
+DeleteUserResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+      example: true
+    message:
+      type: string
+      example: User deleted successfully
+    deletedUserId:
+      type: string
+      example: 6960deb3762dab04119ecb64
+
+DeleteAllUsersResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: All Users deleted successfully
+    deletedUserId:
+      type: string
+      example: 6960deb3762dab04119ecb64

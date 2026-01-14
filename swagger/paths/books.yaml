@@ -131,3 +131,71 @@ post:
               message:
                 type: string
                 example: Internal server error
+
+
+delete:
+  tags: [Books]
+  summary: Delete All books
+  description: Admin only
+  security:
+    - BearerAuth: []
+
+  responses:
+    "204":
+      description: All Books deleted successfully
+
+    "401":
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Unauthorized
+
+    "403":
+      description: Forbidden (Admin only)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Only admin can delete books
+
+    "404":
+      description: Book not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Book not found
+
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal server error

@@ -1,0 +1,122 @@
+get:
+  summary: Get all users (Admin only)
+  tags:
+    - Users
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: List of users
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/GetAllUsersResponse"
+    403:
+      description: Forbidden (Admin only)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Only admin can view all users
+
+    404:
+      description: User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: No user found
+
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal server error
+
+delete:
+  summary: Delete All users (Admin only)
+  tags:
+    - Users
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: All Users deleted successfully
+    400:
+      description: Invalid user ID
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Invalid user ID
+
+    404:
+      description: User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: No user found
+
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal server error

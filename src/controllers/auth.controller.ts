@@ -6,6 +6,7 @@ import { signupSchema, loginSchema } from "../schemas/auth.schema";
 
 import logger from "../logger/logger";
 
+// Register a new user
 export const signup = async (req: Request, res: Response) => {
   logger.debug("signup flow started");
   const parsed = signupSchema.safeParse(req.body);
@@ -36,6 +37,7 @@ export const signup = async (req: Request, res: Response) => {
   res.status(201).json({ message: "User registered successfully", userId: user._id });
 };
 
+// Logging in to existing user
 export const login = async (req: Request, res: Response) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
