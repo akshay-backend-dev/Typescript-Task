@@ -1,3 +1,4 @@
+// CREATE USER
 // {
 //   "name": "Akshay",
 //   "email": "akshay@test4.com",
@@ -7,21 +8,29 @@
 // }
 
 
+// UPDATE USER
+// {
+//     "name": "Akshay G"
+//     "email": "akshay@user.com"
+// }
+
+
+// LOGGING IN USER
 // {
 //   "email": "akshay@test.com",
 //   "password": "password123"
 // }
 
 
+// CREATE BOOK
 // {
-//   "title": "Clean Code",
-//   "author": "Robert Martin",
-//   "publishedYear": 2009
+//   "title": "Clean Code 2.0",
+//   "author": "Robert Martin G",
+//   "publishedYear": 2011
 // }
 
 
+// UPDATE BOOK
 // {
-//   "title": "Not a Clean Code",
-//   "author": "Robert Martin G",
-//   "publishedYear": 2011
+//     "publishedYear": "2027"
 // }
