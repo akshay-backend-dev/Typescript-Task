@@ -1,42 +1,25 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
-import { createSocket } from "../socket/socket";
+import { createContext, useContext, useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
-type SocketContextType = {
-  socket: Socket | null;
-};
+const SocketContext = createContext<{ socket: Socket | null }>({ socket: null });
 
-const SocketContext = createContext<SocketContextType>({
-  socket: null,
-});
-
-export const useSocket = () => useContext(SocketContext);
-
-export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (!token) return;
 
-    const socketInstance = createSocket(token);
-
-    socketInstance.on("connect", () => {
-      console.log("Socket connected:", socketInstance.id);
+    const newSocket = io("http://192.168.1.111:2209", {
+      auth: { token },
     });
 
-    socketInstance.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
-
-    setSocket(socketInstance);
+    setSocket(newSocket);
 
     return () => {
-      socketInstance.disconnect();
+      newSocket.disconnect();
     };
-  }, []);
+  }, [localStorage.getItem("adminToken")]);
 
   return (
     <SocketContext.Provider value={{ socket }}>
@@ -44,3 +27,5 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     </SocketContext.Provider>
   );
 };
+
+export const useSocket = () => useContext(SocketContext);

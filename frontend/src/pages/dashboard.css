@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.main-screen {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    flex: 1 1 280px;
+    max-width: 600px;
+    background-color: whitesmoke;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.main-heading {
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.count-heading {
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: red;
+    margin-top: 31px;
+}
+
+.activity-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: green;
+    margin-bottom: 9px;
+}
+
+.activity-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 45px;
+  right: 60px;
+  padding: 11px 31px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+  background-color: #d32f2f;
+  color: white;
+}
+
+.logout-btn:hover {
+  background-color: #b71c1c;
+}

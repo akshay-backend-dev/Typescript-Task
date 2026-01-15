@@ -1,42 +1,49 @@
 import { useState } from "react";
 import api from "../api/axios";
+import "./admin-login.css";
 
-const AdminLogin = () => {
+
+const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
     try {
-      const res = await api.post("/api/auth/login", {
-        email,
-        password,
-      });
-
-      const token = res.data.token;
-      localStorage.setItem("adminToken", token);
-
-      window.location.reload();
+      const res = await api.post("/api/auth/login", { email, password });
+      localStorage.setItem("adminToken", res.data.token);
+      onLogin();
     } catch (err: any) {
-      console.error(err);
       setError(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div>
-      <h2>Admin Login</h2>
+    <div className="main-screen">
+      <div className="login-card">
+        <p className="login-main-heading">Admin Login</p>
 
-      <input value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <p className="email-heading">Enter Admin Email :</p>
+        <input
+          className="admin-email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <button onClick={handleLogin}>Login</button>
+        <p className="password-heading">Enter Admin Password :</p>
+        <input
+          type="password"
+          className="admin-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        <button className="login-btn" onClick={handleLogin}>
+          Login
+        </button>
+
+        {error && <p className="login-error">{error}</p>}
+      </div>
     </div>
   );
 };

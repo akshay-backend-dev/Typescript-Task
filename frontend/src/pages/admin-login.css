@@ -1,0 +1,84 @@
+.login-main-screen {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    height: 500px;
+    width: 100%;
+    max-width: 460px;
+    background-color: whitesmoke;
+    padding: 24px 30px;
+    border: 1px solid black;
+    border-radius: 14px;
+}
+
+.login-main-heading {
+    font-size: 2.7rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.bottom-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: grey;
+  margin: 31px auto 0 auto;
+  border-radius: 2px;
+}
+
+.email-heading,
+.password-heading {
+    font-weight: 600;
+    color: brown;
+    margin: 18px 0;
+}
+
+.admin-email,
+.admin-password {
+    width: 100%;
+    border-radius: 22px;
+    border: 2px solid black;
+    padding: 10px 16px;
+    margin-bottom: 31px;
+    font-size: 14px;
+}
+
+.login-btn {
+    width: 120px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 20px;
+    background-color: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: darkgreen;
+}
+
+.login-error {
+    width: 111px;
+    margin-top: 12px;
+    margin-left: auto;
+    padding: 6px 9px;
+    color: #b71c1c;
+    background-color: #fdecea;
+    border: 1px solid #f5c6cb;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+}

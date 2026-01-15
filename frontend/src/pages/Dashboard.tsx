@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useSocket } from "../context/SocketContext";
+import "./dashboard.css";
 
 const Dashboard = () => {
     const { socket } = useSocket();
@@ -18,24 +19,15 @@ const Dashboard = () => {
 
         socket.on("book:added", (data) => {
             setBooksCount((prev) => prev + 1);
-            setLogs((prev) => [
-                `Book added: ${data.title}`,
-                ...prev,
-            ]);
+            setLogs((prev) => [`Book added: ${data.title}`, ...prev]);
         });
 
         socket.on("user:logged-in", (data) => {
-            setLogs((prev) => [
-                `User logged in: ${data.email}`,
-                ...prev,
-            ]);
+            setLogs((prev) => [`User logged in: ${data.email}`, ...prev]);
         });
 
         socket.on("user:signed-up", (data) => {
-            setLogs((prev) => [
-                `New user signed up: ${data.email}`,
-                ...prev,
-            ]);
+            setLogs((prev) => [`New user signed up: ${data.email}`, ...prev]);
         });
 
         return () => {
@@ -45,20 +37,36 @@ const Dashboard = () => {
         };
     }, [socket]);
 
+    const handleLogout = () => {
+        localStorage.removeItem("adminToken");
+        window.location.reload();
+    };
+
     return (
-        <div style={{ padding: "20px" }}>
-            <h1>Admin Dashboard</h1>
+        <div className="main-screen">
+            <div className="card">
 
-            <h2>Total Books: {booksCount}</h2>
+                <button className="logout-btn" onClick={handleLogout}>
+                    Logout
+                </button>
 
-            <hr />
+                <p className="main-heading">
+                    Admin Dashboard
+                    <span className="bottom-line"></span>
+                </p>
+                <p className="count-heading">Total Books: {booksCount}</p>
 
-            <h3>Real-time Activity</h3>
-            <ul>
-                {logs.map((log, index) => (
-                    <li key={index}>{log}</li>
-                ))}
-            </ul>
+                {logs.length > 0 && (
+                    <>
+                        <p className="activity-heading">Real-time Activity :</p>
+                        <ul className="activity-list">
+                            {logs.map((log, index) => (
+                                <li key={index}>{log}</li>
+                            ))}
+                        </ul>
+                    </>
+                )}
+            </div>
         </div>
     );
 };

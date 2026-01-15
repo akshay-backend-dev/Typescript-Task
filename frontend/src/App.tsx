@@ -1,11 +1,19 @@
+import { useState } from "react";
 import AdminLogin from "./pages/AdminLogin";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
+  const [token, setToken] = useState(
+    localStorage.getItem("adminToken")
+  );
+
   return (
     <>
-      <AdminLogin />
-      <Dashboard />
+      {!token ? (
+        <AdminLogin onLogin={() => setToken(localStorage.getItem("adminToken"))} />
+      ) : (
+        <Dashboard />
+      )}
     </>
   );
 }
