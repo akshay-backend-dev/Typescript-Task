@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import logger from "../logger/logger";
 import { getUserLogger } from "../logger/userLogger";
 
+import { io } from "../server";
+
 // Add new book
 export const addBook = async (req: Request, res: Response) => {
 
@@ -32,6 +34,19 @@ export const addBook = async (req: Request, res: Response) => {
   });
 
   userLogger.info(`Book added | bookId=${book._id}`);
+
+  io.to("admins").emit("book:added", {
+    bookId: book._id,
+    title: book.title,
+    author: book.author,
+    publishedYear: book.publishedYear,
+    addedBy: {
+      userId,
+      role,
+    },
+    createdAt: book.createdAt,
+  });
+
   res.status(201).json(book);
 };
 
