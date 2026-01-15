@@ -5,6 +5,23 @@ import { Types } from "mongoose";
 import { updateUserSchema } from "../schemas/user.schema";
 
 
+// Get admin (Admin only)
+export const getMyProfile = async (req: Request, res: Response) => {
+  const { userId } = req.user!;
+
+  const user = await User.findById(userId)
+    .select("-password -__v");
+
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  res.status(200).json(user);
+};
+
+
 // Get all users (Admin only)
 export const getAllUsers = async (req: Request, res: Response) => {
   const { role } = req.user!;
@@ -34,7 +51,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 // Get specific user by ID (Admin only)
 export const getUserById = async (req: Request, res: Response) => {
-  const { role } = req.user!;
+  const { role, userId: adminId } = req.user!;
   const { id } = req.params;
 
   if (role !== "admin") {
@@ -49,7 +66,12 @@ export const getUserById = async (req: Request, res: Response) => {
     });
   }
 
-  const user = await User.findOne({ _id: id, role: "user" })
+  const query =
+    id === adminId
+      ? { _id: id }
+      : { _id: id, role: "user" };
+
+  const user = await User.findOne(query)
     .select("-password -__v");
 
   if (!user) {
@@ -58,13 +80,13 @@ export const getUserById = async (req: Request, res: Response) => {
     });
   }
 
-  res.json(user);
+  res.status(200).json(user);
 };
 
 
 // Update user by ID (Admin only)
 export const updateUserById = async (req: Request, res: Response) => {
-  const { role } = req.user!;
+  const { role, userId: adminId } = req.user!;
   const { id } = req.params;
 
   if (role !== "admin") {
@@ -80,7 +102,7 @@ export const updateUserById = async (req: Request, res: Response) => {
   }
 
   const targetUser = await User.findById(id);
-  if (!targetUser || targetUser.role !== "user") {
+  if (!targetUser) {
     return res.status(404).json({
       message: "User not found",
     });
@@ -97,14 +119,21 @@ export const updateUserById = async (req: Request, res: Response) => {
     });
   }
 
+  if ("role" in parsed.data) {
+    delete parsed.data.role;
+  }
+
   const updatedUser = await User.findByIdAndUpdate(
     id,
     parsed.data,
     { new: true }
   ).select("-password -__v");
 
-  res.json({
-    message: "User updated successfully",
+  res.status(200).json({
+    message:
+      adminId === id
+        ? "Admin profile updated successfully"
+        : "User updated successfully",
     user: updatedUser,
   });
 };

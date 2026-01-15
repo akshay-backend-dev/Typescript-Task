@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
@@ -10,6 +11,24 @@ import SwaggerParser from "@apidevtools/swagger-parser"; // It helps in resolvin
 import path from "path";
 
 const app = express();
+
+// app.use(
+//   cors({
+//     origin: true,
+//     credentials: true,
+//   })
+// );
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://192.168.1.111:5173",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
