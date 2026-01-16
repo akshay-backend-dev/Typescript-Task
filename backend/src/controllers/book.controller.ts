@@ -1,17 +1,22 @@
 import { Request, Response } from "express";
-import Book from "../models/Book";
-import { bookSchema, updateBookSchema } from "../schemas/book.schema";
 import mongoose from "mongoose";
 
+// Import model files
+import Book from "../models/Book";
+
+// Import schema files
+import { bookSchema, updateBookSchema } from "../schemas/book.schema";
+
+// import logger files
 import logger from "../logger/logger";
 import { getUserLogger } from "../logger/userLogger";
 
-import { io } from "../server";
+// Import socket files
+import { bookSocket } from "../sockets/server/book.socket";
+
 
 // Add new book
 export const addBook = async (req: Request, res: Response) => {
-
-  // console.log("REQ BODY:", req.body);
 
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -35,15 +40,12 @@ export const addBook = async (req: Request, res: Response) => {
 
   userLogger.info(`Book added | bookId=${book._id}`);
 
-  io.to("admins").emit("book:added", {
+  bookSocket.bookAdded({
     bookId: book._id,
     title: book.title,
     author: book.author,
     publishedYear: book.publishedYear,
-    addedBy: {
-      userId,
-      role,
-    },
+    addedBy: { userId, role },
     createdAt: book.createdAt,
   });
 
@@ -107,7 +109,7 @@ export const getBooks = async (req: Request, res: Response) => {
 };
 
 
-// Get specific book by ID
+// Get a book by ID
 export const getBookById = async (req: Request, res: Response) => {
   const { userId, role } = req.user!;
 
@@ -126,7 +128,7 @@ export const getBookById = async (req: Request, res: Response) => {
 };
 
 
-// Update an existing specific book by ID
+// Update an existing book by ID
 export const updateBook = async (req: Request, res: Response) => {
   const { userId, role } = req.user!;
 
@@ -160,7 +162,7 @@ export const updateBook = async (req: Request, res: Response) => {
 };
 
 
-// Delete specific book by ID
+// Delete a book by ID (Admin only)
 export const deleteBook = async (req: Request, res: Response) => {
   const { role } = req.user!;
 
@@ -178,6 +180,7 @@ export const deleteBook = async (req: Request, res: Response) => {
 
   res.json({ message: "Book deleted successfully" });
 };
+
 
 // Delete ALL books (Admin only)
 export const deleteAllBooks = async (req: Request, res: Response) => {

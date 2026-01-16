@@ -1,17 +1,12 @@
 import { Router } from "express";
-import {
-  addBook,
-  getBooks,
-  getBookById,
-  updateBook,
-  deleteBook,
-  deleteAllBooks
-} from "../controllers/book.controller";
 
+// Import controller files
+import { addBook, getBooks, getBookById, updateBook, deleteBook, deleteAllBooks } from "../controllers/book.controller";
+
+// Import middleware files
 import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
-
 router.use(authMiddleware);
 
 // Route to create new book

@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+
+// Import logger files
 import logger from "../logger/logger";
 
 export const connectDB = async () => {

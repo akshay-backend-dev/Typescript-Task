@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
-import User from "../models/User";
 import mongoose from "mongoose";
 import { Types } from "mongoose";
+
+// Import model files
+import User from "../models/User";
+
+// Import schema files
 import { updateUserSchema } from "../schemas/user.schema";
 
 
@@ -49,7 +53,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 
-// Get specific user by ID (Admin only)
+// Get a user by ID (Admin only)
 export const getUserById = async (req: Request, res: Response) => {
   const { role, userId: adminId } = req.user!;
   const { id } = req.params;

@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+
+// Import logger files
 import logger from "../logger/logger";
 
 interface JwtPayload {

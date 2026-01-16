@@ -1,16 +1,20 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 
+// Import routes files
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import bookRoutes from "./routes/book.routes";
 
 import swaggerUi from "swagger-ui-express";
-import SwaggerParser from "@apidevtools/swagger-parser"; // It helps in resolving ref errors by creating final bundle
 
-import path from "path";
+// It helps in resolving ref errors by creating final bundle
+import SwaggerParser from "@apidevtools/swagger-parser";
 
 const app = express();
+
+// For all URL
 
 // app.use(
 //   cors({

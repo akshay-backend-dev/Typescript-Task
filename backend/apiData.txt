@@ -1,10 +1,17 @@
 // CREATE USER
 // {
 //   "name": "Akshay",
-//   "email": "akshay@test4.com",
+//   "email": "akshay@user.com",
 //   "role": "user",
 //   "password": "password123",
 //   "confirmPassword": "password123"
+// }
+
+
+// LOGGING IN USER
+// {
+//   "email": "akshay@user.com",
+//   "password": "password123"
 // }
 
 
@@ -15,22 +22,53 @@
 // }
 
 
-// LOGGING IN USER
+// CREATE ADMIN
 // {
-//   "email": "akshay@test.com",
+//   "name": "Akshay",
+//   "email": "akshay@admin.com",
+//   "role": "admin",
+//   "password": "password123",
+//   "confirmPassword": "password123"
+// }
+
+
+// LOGGING IN ADMIN
+// {
+//   "email": "akshay@admin.com",
 //   "password": "password123"
+// }
+
+
+// UPDATE ADMIN
+// {
+//     "name": "Akshay G"
+//     "email": "akshay@admin.com"
 // }
 
 
 // CREATE BOOK
 // {
-//   "title": "Clean Code 2.0",
-//   "author": "Robert Martin G",
-//   "publishedYear": 2011
+//   "title": "Clean Code",
+//   "author": "Robert Martin",
+//   "publishedYear": 2009
 // }
 
 
 // UPDATE BOOK
 // {
-//     "publishedYear": "2027"
+//     "title": "Clean Code 2.o"
+// }
+
+// {
+//     "author": "Robert Martin G"
+// }
+
+// {
+//     "publishedYear": "2022"
+// }
+
+// {
+//   "title": "Clean Code 2.o",
+//   "author": "Robert Martin G",
+//   "publishedYear": 2022
 // }

@@ -1,16 +1,20 @@
 import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+
+// Import model files
+import User from "../../models/User";
 
 export const socketAuth = async (
   socket: Socket,
   next: (err?: Error) => void
 ) => {
   try {
-    const token = socket.handshake.auth?.token;
+    let token = socket.handshake.auth?.token;
 
-    if (!token) {
-      return next(new Error("Unauthorized"));
+    if (!token) return next(new Error("Unauthorized"));
+
+    if (token.startsWith("Bearer ")) {
+      token = token.split(" ")[1];
     }
 
     const decoded: any = jwt.verify(
@@ -22,14 +26,11 @@ export const socketAuth = async (
       "_id email role"
     );
 
-    if (!user) {
-      return next(new Error("Unauthorized"));
-    }
+    if (!user) return next(new Error("Unauthorized"));
 
     socket.data.user = user;
-
-    return next();
-  } catch (err) {
-    return next(new Error("Unauthorized"));
+    next();
+  } catch {
+    next(new Error("Unauthorized"));
   }
 };
