@@ -29,6 +29,10 @@ dotenv.config({
   path: path.resolve(process.cwd(), ".env"),
 });
 
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  throw new Error("EMAIL credentials missing in .env");
+}
+
 // Import logger files
 import logger from "./logger/logger";
 

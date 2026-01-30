@@ -1,0 +1,327 @@
+// Normal
+// const emailTemplate = (data: ContactBody, formID: string): string => {
+//     return `
+//   <div style="background:#f4f6f8;padding:20px;font-family:Arial">
+//     <div style="max-width:600px;margin:auto;background:#fff;border-radius:8px;padding:20px">
+//       <h2><span style="font-size:16px;">📩</span> New Inquiry Received</h2>
+
+//       <table style="width:100%">
+//         <tr><td><b>Name</b></td><td>${data.Name}</td></tr>
+//         <tr><td><b>Email</b></td><td>${data.Email}</td></tr>
+//         <tr><td><b>Phone</b></td><td>${data.Phone}</td></tr>
+//         <tr><td><b>Message</b></td><td>${data.Message}</td></tr>
+//       </table>
+
+//       <hr style="margin:20px 0" />
+//       <p style="font-size:12px;color:#777">
+//         Form ID: ${formID} <br />
+//         Received on: ${new Date().toLocaleString()}
+//       </p>
+//     </div>
+//   </div>
+//   `;
+// };
+
+
+
+
+
+
+
+
+
+// With Icons
+// const emailTemplate = (data: ContactBody, formID: string): string => {
+//   return `
+//   <!DOCTYPE html>
+//   <html lang="en">
+//   <head>
+//     <meta charset="UTF-8">
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//     <title>New Contact Inquiry</title>
+//   </head>
+//   <body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f4f6f8;">
+//     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:20px;">
+//       <tr>
+//         <td>
+//           <!-- Card Container -->
+//           <table align="center" width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+//             <!-- Header -->
+//             <tr>
+//               <td style="text-align:center;padding-bottom:20px;">
+//                 <h2 style="margin:0;font-size:22px;color:#333;display:flex;align-items:center;justify-content:center;">
+//                   <span style="font-size:18px;margin-right:8px;">📩</span>
+//                   New Inquiry Received
+//                 </h2>
+//               </td>
+//             </tr>
+
+//             <!-- Contact Info -->
+//             <tr>
+//               <td>
+//                 <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
+//                   <tr>
+//                     <td style="font-weight:bold;color:#555;width:120px;">👤 Name</td>
+//                     <td>${data.Name}</td>
+//                   </tr>
+//                   <tr>
+//                     <td style="font-weight:bold;color:#555;">📧 Email</td>
+//                     <td>${data.Email}</td>
+//                   </tr>
+//                   <tr>
+//                     <td style="font-weight:bold;color:#555;">📞 Phone</td>
+//                     <td>${data.Phone}</td>
+//                   </tr>
+//                   <tr>
+//                     <td style="font-weight:bold;color:#555;">💬 Message</td>
+//                     <td>${data.Message}</td>
+//                   </tr>
+//                 </table>
+//               </td>
+//             </tr>
+
+//             <!-- Divider -->
+//             <tr>
+//               <td>
+//                 <hr style="border:none;border-top:1px solid #eee;margin:20px 0;" />
+//               </td>
+//             </tr>
+
+//             <!-- Footer -->
+//             <tr>
+//               <td style="font-size:12px;color:#777;text-align:center;">
+//                 Form ID: <strong>${formID}</strong><br />
+//                 Received on: ${new Date().toLocaleString()}
+//               </td>
+//             </tr>
+
+//           </table>
+//         </td>
+//       </tr>
+//     </table>
+//   </body>
+//   </html>
+//   `;
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { Request, Response } from "express";
+import nodemailer from "nodemailer";
+import { v4 as uuidv4 } from "uuid";
+
+interface ContactBody {
+    Name: string;
+    Email: string;
+    Phone: number;
+    Message: string;
+    formID?: string;
+}
+
+const emailTemplate = (data: ContactBody, formID: string): string => {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Contact Inquiry</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:20px;">
+    <tr>
+      <td align="center">
+
+        <!-- Main Card -->
+        <table width="700" cellpadding="0" cellspacing="0"
+          style="background:linear-gradient(135deg,#F28F17 0%,#FFFAF4 50%,#66B5FF 100%);
+                 border-radius:12px;
+                 padding:30px;">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding-bottom:20px;">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  
+                  <td style="font-size:22px;font-weight:bold;color:#333;padding-left:8px;">
+                    New Inquiry Received
+                    <img src="cid:inquiryImage" width="81"
+                            style="vertical-align:middle;margin-left:4px" />
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- White Card -->
+          <tr>
+            <td>
+              <table width="100%" cellpadding="0" cellspacing="0"
+                style="background:#ffffff;border-radius:12px;">
+                <tr>
+                  <td style="padding:30px;">
+
+                    <!-- Data Rows -->
+                    <table width="100%" cellpadding="0" cellspacing="0">
+
+                      <!-- Name -->
+                      <tr>
+                        <td width="160" style="padding:10px 0;font-weight:bold;color:#000;">
+                          <img src="cid:userIcon" width="27"
+                            style="vertical-align:middle;margin-right:2px;" />
+                          Name:
+                        </td>
+                        <td style="padding:10px 0;color:#333;">
+                          ${data.Name}
+                        </td>
+                      </tr>
+
+                      <!-- Email -->
+                      <tr>
+                        <td style="padding:10px 0;font-weight:bold;color:#000;">
+                          <img src="cid:emailIcon" width="27"
+                            style="vertical-align:middle;margin-right:2px;" />
+                          Email:
+                        </td>
+                        <td style="padding:10px 0;color:#333;">
+                          ${data.Email}
+                        </td>
+                      </tr>
+
+                      <!-- Phone -->
+                      <tr>
+                        <td style="padding:10px 0;font-weight:bold;color:#000;">
+                          <img src="cid:phoneIcon" width="27"
+                            style="vertical-align:middle;margin-right:2px;" />
+                          Phone:
+                        </td>
+                        <td style="padding:10px 0;color:#333;">
+                          ${data.Phone}
+                        </td>
+                      </tr>
+
+                      <!-- Message -->
+                      <tr>
+                        <td style="padding:10px 0;font-weight:bold;color:#000;vertical-align:top;">
+                          <img src="cid:messageIcon" width="27"
+                            style="vertical-align:middle;margin-right:2px;" />
+                          Message:
+                        </td>
+                        <td style="padding:10px 0;color:#333;line-height:1.6;text-align:justify;">
+                          ${data.Message}
+                        </td>
+                      </tr>
+
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top:20px;font-size:12px;color:#333;">
+              Form ID: <strong>${formID}</strong><br />
+              Received on: ${new Date().toLocaleString()}
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+};
+
+export const contactUsController = async (
+    req: Request<{}, {}, ContactBody>,
+    res: Response
+): Promise<Response> => {
+
+    const formID = req.body.formID || uuidv4();
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER as string,
+            pass: process.env.EMAIL_PASS as string
+        }
+    });
+
+    try {
+        const { Name, Email, Phone, Message } = req.body;
+
+        if (!Name || !Email || !Phone || !Message) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required"
+            });
+        }
+
+        await transporter.sendMail({
+            from: `"Contact Us" <${process.env.EMAIL_USER}>`,
+            to: "akshay.mittal@adaired.org",
+            subject: "New Contact Inquiry",
+            html: emailTemplate(req.body, formID),
+            attachments: [
+                {
+                    filename: "inquiry.png",
+                    path: "public/images/inquiry.png",
+                    cid: "inquiryImage"
+                },
+                {
+                    filename: "user.png",
+                    path: "public/icons/user.png",
+                    cid: "userIcon"
+                },
+                {
+                    filename: "email.png",
+                    path: "public/icons/email.png",
+                    cid: "emailIcon"
+                },
+                {
+                    filename: "phone.png",
+                    path: "public/icons/phone.png",
+                    cid: "phoneIcon"
+                },
+                {
+                    filename: "message.png",
+                    path: "public/icons/message.png",
+                    cid: "messageIcon"
+                }
+            ]
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Contact request sent successfully"
+        });
+
+    } catch (error: any) {
+        console.error("Contact Us Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Email sending failed"
+        });
+    }
+};

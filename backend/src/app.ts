@@ -6,6 +6,7 @@ import path from "path";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import bookRoutes from "./routes/book.routes";
+import contactRoutes from "./routes/contact.routes";
 
 import swaggerUi from "swagger-ui-express";
 
@@ -13,6 +14,8 @@ import swaggerUi from "swagger-ui-express";
 import SwaggerParser from "@apidevtools/swagger-parser";
 
 const app = express();
+
+app.use("/public", express.static(path.join(process.cwd(), "public")));
 
 // For all URL
 
@@ -62,5 +65,6 @@ app.get("/api-docs", async (req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", bookRoutes);
+app.use("/api", contactRoutes);
 
 export default app;
